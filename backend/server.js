@@ -19,12 +19,12 @@ db.once('open', () => {
 // Import your schema models
 const Book = require('./models/bookSchema');
 const BookLog = require('./models/bookLogSchema');
-const Copy = require('./models/copySchema');
+const Copy = require('./models/copiesSchema');
 const User = require('./models/userSchema');
 // Import other schema models if necessary
 
 // Import your routes
-const bookRoutes = require('./routes/booksRoutes');
+const bookRoutes = require('./routes/bookRoutes');
 const bookLogRoutes = require('./routes/bookLogRoutes');
 const copyRoutes = require('./routes/copiesRoutes');
 const userRoutes = require('./routes/usersRoutes');

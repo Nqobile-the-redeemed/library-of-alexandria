@@ -43,7 +43,7 @@ const bookSchema = new mongoose.Schema({
     type: String
   },
   quantity:  {
-    type: number
+    type: Number
   }
 });
 
