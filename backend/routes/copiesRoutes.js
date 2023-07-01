@@ -4,8 +4,8 @@ const router = express.Router();
 const copiesController = require('../controllers/copiesController');
 
 // Define routes
-router.get('/', copiesController.getCopy);
-router.post('/', copiesController.createCopy);
+router.get('/', copiesController.getCopies);
+router.post('/', copiesController.saveCopy);
 // other routes...
 
 module.exports = router;

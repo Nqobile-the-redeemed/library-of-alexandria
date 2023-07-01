@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 
@@ -16,6 +17,16 @@ db.once('open', () => {
   console.log('Connected to the MongoDB database.');
 });
 
+// Enable CORS
+app.use(cors());
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
+
 // Import your schema models
 const Book = require('./models/bookSchema');
 const BookLog = require('./models/bookLogSchema');
@@ -27,7 +38,7 @@ const User = require('./models/userSchema');
 const bookRoutes = require('./routes/bookRoutes');
 const bookLogRoutes = require('./routes/bookLogRoutes');
 const copyRoutes = require('./routes/copiesRoutes');
-const userRoutes = require('./routes/usersRoutes');
+const userRoutes = require('./routes/userRoutes');
 // Import other routes if necessary
 
 // Use the routes
@@ -38,6 +49,6 @@ app.use('/api/users', userRoutes);
 // Use other routes if necessary
 
 // Start the server
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(5000, () => {
+  console.log('Server is running on port 5000');
 });

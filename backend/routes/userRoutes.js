@@ -4,8 +4,8 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 // Define routes
-router.get('/', userController.getusers);
-router.post('/', userController.createuser);
+router.get('/', userController.getUsers);
+router.post('/', userController.saveUser);
 // other routes...
 
 module.exports = router;
