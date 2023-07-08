@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+const path = require('path');
 
 const app = express();
 
@@ -19,6 +21,13 @@ db.once('open', () => {
 
 // Enable CORS
 app.use(cors());
+
+// Serve static files from the 'imageUploads' folder
+app.use('/api/imageUploads', express.static(path.join(__dirname, 'imageUploads')));
+
+
+//Enable file upload
+app.use(fileUpload()); 
 
 // parse requests of content-type - application/json
 app.use(express.json());

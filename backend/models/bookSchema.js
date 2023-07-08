@@ -18,8 +18,10 @@ const bookSchema = new mongoose.Schema({
     default: [] 
   },
   gallery: {
-    type: [Buffer], 
-    contentType: String
+    type: [String] // Array of file locations
+  },
+  bookCover: {
+    type: String // File location
   },
   checkoutDate: {
     type: Date
