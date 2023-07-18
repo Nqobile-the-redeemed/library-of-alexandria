@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { editBook, uploadImage } from '../actions/booksActions';
+import { editBook } from '../actions/booksActions';
+import { uploadImage } from '../services/bookServices/uploadService';
 
 const BookDetails = ({ book }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,56 +18,61 @@ const BookDetails = ({ book }) => {
     setIsEditing(true);
   };
 
-  const handleSaveClick = async () => {
-    try {
-      setIsSaving(true); // Set saving state to true
+  const handleSaveClick = () => {
+    setIsSaving(true); // Set saving state to true
   
-      const editedBook = {
-        ...book,
-        title: editedTitle,
-        author: editedAuthor,
-        description: editedDescription,
-      };
+    const editedBook = {
+      ...book,
+      title: editedTitle,
+      author: editedAuthor,
+      description: editedDescription,
+    };
   
-      if (selectedImage) {
-        console.log("what the fuck");
-        const formData = new FormData();
-        formData.append('bookCover', selectedImage);
-        try {
-          const response = await dispatch(uploadImage(formData));
-          console.log("is this even being checked");
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append('bookCover', selectedImage);
+  
+      (uploadImage(formData))
+        .then((response) => {
           console.log(response);
-          editedBook.bookCover = response.payload.fileURL;
-  
-          // Rest of your code that depends on the response goes here
-          await dispatch(editBook(book._id, editedBook));
-  
+          editedBook.bookCover = response;
+          console.log(editedBook);
+          dispatch(editBook(book._id, editedBook));
+        })
+        .then(() => {
           setIsEditing(false);
           setIsSaving(false);
           setError(null);
           setEditedTitle(book.title); // Reset edited values
           setEditedAuthor(book.author);
           setEditedDescription(book.description);
-        } catch (uploadError) {
+        })
+        .catch((uploadError) => {
           console.log(uploadError);
+          setIsSaving(false);
           setError('Failed to upload image. Please try again.');
-        }
-      } else {
-        // Rest of your code when selectedImage is not present goes here
-        await dispatch(editBook(book._id, editedBook));
-  
-        setIsEditing(false);
-        setIsSaving(false);
-        setError(null);
-        setEditedTitle(book.title); // Reset edited values
-        setEditedAuthor(book.author);
-        setEditedDescription(book.description);
-      }
-    } catch (error) {
-      setIsSaving(false);
-      setError('Failed to save changes. Please try again.');
+        });
+    } else {
+      dispatch(editBook(book._id, editedBook))
+        .then(() => {
+          setIsEditing(false);
+          setIsSaving(false);
+          setError(null);
+          setEditedTitle(book.title); // Reset edited values
+          setEditedAuthor(book.author);
+          setEditedDescription(book.description);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsSaving(false);
+          setError('Failed to save changes. Please try again.');
+        });
     }
   };
+  
+ 
+
+  
   
 
   const handleImageChange = (e) => {

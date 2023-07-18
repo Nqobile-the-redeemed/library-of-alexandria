@@ -50,6 +50,7 @@ export const editBook = (bookId, updatedBookData) => {
       .put(`http://localhost:5000/api/books/${bookId}`, updatedBookData)
       .then((response) => {
         const editedBook = response.data;
+        console.log(editedBook);
         dispatch(editBookSuccess(editedBook));
       })
       .catch((error) => {
@@ -57,7 +58,6 @@ export const editBook = (bookId, updatedBookData) => {
       });
   };
 };
-
 
 
 
@@ -78,21 +78,13 @@ export const uploadImageSuccess = (fileURL) => {
 
 
 
-export const uploadImage = (formData) => {
-  return (dispatch) => {
-    dispatch(uploadImageRequest());
-    axios
-      .post(`http://localhost:5000/api/books/upload`, formData)
-      .then((response) => {
-        console.log(response.data.fileURL)
-        const fileURL = response.data.fileURL; // Assuming the response contains the file URL
-        dispatch(uploadImageSuccess(fileURL));
-      })
-      .catch((error) => {
-        dispatch(uploadImageFailure(error.message));
-      });
-  };
-};
+
+
+
+
+
+
+
 
 
 // Other book-related actions
