@@ -1,7 +1,7 @@
 import React from 'react'
 
-export const copiesPage = () => {
+export const CopiesPage = () => {
   return (
-    <div>copiesPage</div>
+    <div>Copies</div>
   )
 }

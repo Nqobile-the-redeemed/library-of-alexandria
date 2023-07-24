@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
-import bookReducer from '../features/book/bookSlice';
+import bookReducer from '../features/books/bookSlice';
 
 
 const logger = createLogger();
 
 const store = configureStore({
     reducer: {
-        book: bookReducer
+        books: bookReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 })
