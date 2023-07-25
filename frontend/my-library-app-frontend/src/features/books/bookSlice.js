@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import { uploadImage } from './services/uploadImage';
 
 
 const initialState = {
     loading: false,
     error: "",
     books:[],
+    fileURL: ""
 }
 
 
@@ -23,16 +24,35 @@ export const fetchBooks = createAsyncThunk(
 )
 
 
-export const uploadImage = createAsyncThunk(
-    'books/uploadImage',
-    async (formData) => {
-       return axios.post(`http://localhost:5000/api/books/upload`, formData)
+
+
+// export const uploadImage = createAsyncThunk(
+//     'books/uploadImage',
+//     async (formData) => {
+//        return axios.post(`http://localhost:5000/api/books/upload`, formData)
+//         .then((response) => {
+//             const fileURL = response.data.fileURL; // Assuming the response contains the file URL
+//             return fileURL
+//         })
+//     }
+// )
+
+
+
+
+export const editBook = createAsyncThunk(
+    'books/editBook',
+    async (omegaHolder) => {
+        console.log(omegaHolder);
+       return axios.put(`http://localhost:5000/api/books/${omegaHolder.bookId}`, omegaHolder.updatedBookData)
         .then((response) => {
-            const fileURL = response.data.fileURL; // Assuming the response contains the file URL
-            return fileURL
+            const bookHolder = response.data;
+            console.log(bookHolder);
+            return bookHolder
         })
     }
 )
+
 
 
 
@@ -55,15 +75,32 @@ const booksSlice = createSlice({
             state.books = []
             state.error = action.error.message
         })
-        builder.addCase(fetchBooks.pending, (state, action) => {
+        builder.addCase(uploadImage.pending, (state, action) => {
             state.loading = true
         })
-        builder.addCase(fetchBooks.fulfilled, (state, action) => {
+        builder.addCase(uploadImage.fulfilled, (state, action) => {
             state.loading = false
-            state.books = action.payload
+            state.fileURL = action.payload
             state.error = ""
         })
-        builder.addCase(fetchBooks.rejected, (state, action) => {
+        builder.addCase(uploadImage.rejected, (state, action) => {
+            state.loading = false
+            state.fileURL = ""
+            state.error = action.error.message
+        })
+        builder.addCase(editBook.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(editBook.fulfilled, (state, action) => {
+            state.loading = false
+            const editedBook = action.payload; // Access the editedBook from action.payload
+            // Update the corresponding book in the state.books array
+            state.books = state.books.map((book) =>
+                book._id === editedBook._id ? editedBook : book
+            );
+            state.error = ""
+        })
+        builder.addCase(editBook.rejected, (state, action) => {
             state.loading = false
             state.books = []
             state.error = action.error.message
@@ -72,13 +109,3 @@ const booksSlice = createSlice({
 })
 
 export default booksSlice.reducer;
-
-
-case 'UPLOAD_IMAGE_REQUEST':
-    return { ...state, loading: true };
-
-  case 'UPLOAD_IMAGE_SUCCESS':
-    return { ...state, loading: false, fileURL: action.payload, error: "" };
-
-  case 'UPLOAD_IMAGE_FAILURE':
-    return { ...state, error: action.payload, loading: false };

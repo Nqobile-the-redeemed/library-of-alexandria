@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { editBook } from '../bookSlice';
+import { uploadImage } from '../services/uploadImage';
 
 export const BookDetails = ({ book }) => {
 
@@ -24,23 +26,118 @@ export const BookDetails = ({ book }) => {
 
 
   //Saving changes to book form
+
   const handleSaveClick = () => {
     setIsSaving(true); // Set saving state to true
-
-    //create a state for the edited book
+  
     const editedBook = {
       ...book,
       title: editedTitle,
       author: editedAuthor,
       description: editedDescription,
     };
+  
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append('bookCover', selectedImage);
+  
+      (uploadImage(formData))
+        .then((response) => {
+          console.log(response);
+          editedBook.bookCover = response;
+          console.log(editedBook);
+          dispatch(editBook(book._id, editedBook));
+        })
+        .then(() => {
+          setIsEditing(false);
+          setIsSaving(false);
+          setError(null);
+          setEditedTitle(book.title); // Reset edited values
+          setEditedAuthor(book.author);
+          setEditedDescription(book.description);
+        })
+        .catch((uploadError) => {
+          console.log(uploadError);
+          setIsSaving(false);
+          setError('Failed to upload image. Please try again.');
+        });
+    } else {
+      dispatch(editBook(book._id, editedBook))
+        .then(() => {
+          setIsEditing(false);
+          setIsSaving(false);
+          setError(null);
+          setEditedTitle(book.title); // Reset edited values
+          setEditedAuthor(book.author);
+          setEditedDescription(book.description);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsSaving(false);
+          setError('Failed to save changes. Please try again.');
+        });
+    }
+  };
+  
 
 
-  }
+//Handle the change of images
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+  };
 
 
 
   return (
-    <div>bookDetails</div>
+    <div className="book-details">
+      <img src={book.bookCover} alt={book.title} />
+      {isEditing ? (
+        <>
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+          />
+          <input
+            type="text"
+            value={editedAuthor}
+            onChange={(e) => setEditedAuthor(e.target.value)}
+          />
+          <input
+            type="text"
+            value={editedDescription}
+            onChange={(e) => setEditedDescription(e.target.value)}
+          />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+        </>
+      ) : (
+        <>
+          <h3>{book.title}</h3>
+          <p>{book.author}</p>
+          <p>{book.description}</p>
+        </>
+      )}
+      {isEditing ? (
+        <>
+          {isSaving ? (
+            <button className="save-btn" disabled>
+              Saving...
+            </button>
+          ) : (
+            <button className="save-btn" onClick={handleSaveClick}>
+              Save
+            </button>
+          )}
+        </>
+      ) : (
+        <button className="edit-btn" onClick={handleEditClick}>
+          Edit
+        </button>
+      )}
+      <button className="delete-btn">Delete</button>
+      {error && <p className="error">{error}</p>}
+      {/* Add more book details as needed */}
+    </div>
   )
 }
