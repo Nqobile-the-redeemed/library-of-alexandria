@@ -95,11 +95,12 @@ const editBookById = async (req, res) => {
   try {
     // Find the book by ID and update its details
     const book = await Book.findByIdAndUpdate(bookId, updatedBook, { new: true });
+    console.log(book)
 
     if (!book) {
       // Book with the given ID not found
       return res.status(404).json({ error: 'Book not found' });
-    }
+    } 
 
     // Book updated successfully
     res.json(book);
@@ -116,10 +117,79 @@ const getBookCover = async (req, res) => {
 
 };
 
+
+
+
+
+// Combine both the upload image and edit book item by ID
+
+const omegaEditBookById = async (req, res) => {
+
+  try {
+    // Check if an image file was uploaded
+
+    console.log(req.bookCover)
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).json({ error: 'No files were uploaded' });
+    }
+
+    const { bookCover, bookId } = req.files;
+    const bookData = JSON.parse(req.body.bookData)
+
+    // Generate a unique file name to avoid conflicts
+    const fileName = `${Date.now()}_${bookCover.name}`;
+
+    const uploadPath = path.join(__dirname, '../imageUploads', fileName);
+
+    // Move the uploaded file to the specified path
+    bookCover.mv(uploadPath, async (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Failed to upload the file' });
+      }
+
+      // Construct the file URL using the base URL and the encoded file name
+      const encodedFileName = encodeURIComponent(fileName);
+      const fileURL = `http://localhost:5000/api/imageUploads/${encodedFileName}`;
+      console.log(fileURL);
+
+      try {
+        // Update the book details
+        const updatedBook = await Book.findByIdAndUpdate(bookId, bookData, { new: true });
+
+        if (!updatedBook) {
+          // Book with the given ID not found
+          return res.status(404).json({ error: 'Book not found' });
+        }
+
+        // Book updated successfully, add the image file URL to the book data
+        updatedBook.bookCover = fileURL;
+
+        // Save the updated book with the image URL
+        const savedBook = await updatedBook.save();
+
+        // Return the updated book with the file URL to the frontend
+        res.json(savedBook);
+      } catch (error) {
+        // Error occurred while updating the book
+        console.error(error);
+        res.status(500).json({ error: 'Failed to update book' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
  module.exports = {
    saveBook,
    getAllBooks,
    editBookById,
    uploadImage,
-   getBookCover
+   getBookCover,
+   omegaEditBookById
  };

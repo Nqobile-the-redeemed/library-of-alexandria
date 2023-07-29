@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { editBook } from '../bookSlice';
+// import { editBook } from '../bookSlice';
+import { editBook, omegaUpdater } from '../bookSlice';
 import { uploadImage } from '../services/uploadImage';
 
 export const BookDetails = ({ book }) => {
@@ -25,59 +26,60 @@ export const BookDetails = ({ book }) => {
   };
 
 
-  //Saving changes to book form
+//Saving changes to book form
 
-  const handleSaveClick = () => {
-    setIsSaving(true); // Set saving state to true
-  
-    const editedBook = {
-      ...book,
-      title: editedTitle,
-      author: editedAuthor,
-      description: editedDescription,
-    };
-  
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append('bookCover', selectedImage);
-  
-      (uploadImage(formData))
-        .then((response) => {
-          console.log(response);
-          editedBook.bookCover = response;
-          console.log(editedBook);
-          dispatch(editBook(book._id, editedBook));
-        })
-        .then(() => {
-          setIsEditing(false);
-          setIsSaving(false);
-          setError(null);
-          setEditedTitle(book.title); // Reset edited values
-          setEditedAuthor(book.author);
-          setEditedDescription(book.description);
-        })
-        .catch((uploadError) => {
-          console.log(uploadError);
-          setIsSaving(false);
-          setError('Failed to upload image. Please try again.');
-        });
-    } else {
-      dispatch(editBook(book._id, editedBook))
-        .then(() => {
-          setIsEditing(false);
-          setIsSaving(false);
-          setError(null);
-          setEditedTitle(book.title); // Reset edited values
-          setEditedAuthor(book.author);
-          setEditedDescription(book.description);
-        })
-        .catch((error) => {
-          console.log(error);
-          setIsSaving(false);
-          setError('Failed to save changes. Please try again.');
-        });
-    }
+const handleSaveClick = () => {
+  setIsSaving(true); // Set saving state to true
+
+  const editedBook = {
+    ...book,
+    title: editedTitle,
+    author: editedAuthor,
+    description: editedDescription,
   };
+
+  const omegaForm = new FormData();
+  omegaForm.append('bookCover', selectedImage);
+  omegaForm.append('bookId', book._id); // bookId is the ID of the book you want to update
+  omegaForm.append('bookData', JSON.stringify( editedBook )); // updatedBookData is the updated book data as an object
+
+  const gigaHolder = {
+    dataForm: omegaForm,
+    bookId: book._id,
+  };
+
+  const omegaHolder = {
+    bookData: editedBook,
+    bookId: book._id,
+  };
+
+console.log('selectedImage:', selectedImage);
+console.log('formData:', omegaForm);
+console.log('gigaHolder:', gigaHolder);
+
+// Log the key/value pairs
+for (var pair of omegaForm.entries()) {
+  console.log(pair[0]+ ' - ' + pair[1]); 
+}
+
+  // dispatch(omegaUpdater(payload))
+  // dispatch(editBook(omegaHolder))
+  dispatch(omegaUpdater(gigaHolder))
+    .then(() => {
+      setIsEditing(false);
+      setIsSaving(false);
+      setError(null);
+      setEditedTitle(book.title); // Reset edited values
+      setEditedAuthor(book.author);
+      setEditedDescription(book.description);
+    })
+    .catch((uploadError) => {
+      console.log(uploadError);
+      setIsSaving(false);
+      setError('Failed to upload image. Please try again.');
+    });
+}
+
   
 
 
