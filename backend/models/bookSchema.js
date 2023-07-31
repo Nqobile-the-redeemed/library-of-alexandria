@@ -14,8 +14,7 @@ const bookSchema = new mongoose.Schema({
     required: true
   },
   tags: {
-    type: [String], 
-    default: [] 
+    type: String
   },
   gallery: {
     type: [String] // Array of file locations

@@ -26,17 +26,6 @@ export const fetchBooks = createAsyncThunk(
 
 
 
-// export const uploadImage = createAsyncThunk(
-//     'books/uploadImage',
-//     async (formData) => {
-//        return axios.post(`http://localhost:5000/api/books/upload`, formData)
-//         .then((response) => {
-//             const fileURL = response.data.fileURL; // Assuming the response contains the file URL
-//             return fileURL
-//         })
-//     }
-// )
-
 
 
 export const editBook = createAsyncThunk(
