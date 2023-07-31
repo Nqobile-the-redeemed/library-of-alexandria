@@ -37,30 +37,13 @@ export const fetchBooks = createAsyncThunk(
 //     }
 // )
 
-export const omegaUpdater = createAsyncThunk(
-    'books/omegaUpdater',
-    async (gigaHolder) => {
-        console.log(gigaHolder);
-       return axios.put(`http://localhost:5000/api/books/${gigaHolder.bookId}`, gigaHolder.formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-        .then((response) => {
-            const bookHolder = response.data;
-            console.log(bookHolder);
-            return bookHolder
-        })
-    }
-)
-
 
 
 export const editBook = createAsyncThunk(
     'books/editBook',
-    async (omegaHolder) => {
-        console.log(omegaHolder);
-       return axios.put(`http://localhost:5000/api/books/omega/${omegaHolder.bookId}`, omegaHolder.bookData)
+    async (alphaOmegaHolder) => {
+        console.log(alphaOmegaHolder);
+       return axios.put(`http://localhost:5000/api/books/${alphaOmegaHolder.bookId}`, alphaOmegaHolder.bookData)
         .then((response) => {
             const bookHolder = response.data;
             console.log(bookHolder);
@@ -117,23 +100,6 @@ const booksSlice = createSlice({
             state.error = ""
         })
         builder.addCase(editBook.rejected, (state, action) => {
-            state.loading = false
-            state.books = []
-            state.error = action.error.message
-        })
-        builder.addCase(omegaUpdater.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(omegaUpdater.fulfilled, (state, action) => {
-            state.loading = false
-            const editedBook = action.payload; // Access the editedBook from action.payload
-            // Update the corresponding book in the state.books array
-            state.books = state.books.map((book) =>
-                book._id === editedBook._id ? editedBook : book
-            );
-            state.error = ""
-        })
-        builder.addCase(omegaUpdater.rejected, (state, action) => {
             state.loading = false
             state.books = []
             state.error = action.error.message

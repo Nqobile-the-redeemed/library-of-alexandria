@@ -7,9 +7,7 @@ const bookController = require('../controllers/bookController');
 router.get('/', bookController.getAllBooks);
 router.post('/', bookController.saveBook);
 router.post('/upload', bookController.uploadImage);
-router.put('/omega/:_id', bookController.editBookById);
-router.put('/:_id', bookController.omegaEditBookById);
-router.get('/:bookCover', bookController.getBookCover);
+router.put('/:_id', bookController.editBookById);
 // other routes...
 
 module.exports = router;
