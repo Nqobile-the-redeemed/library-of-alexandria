@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-// import { uploadImage } from './services/uploadImage';
 
 
 const initialState = {
     loading: false,
     error: "",
     books:[],
-    fileURL: ""
 }
 
 
@@ -63,19 +61,6 @@ const booksSlice = createSlice({
             state.books = []
             state.error = action.error.message
         })
-        // builder.addCase(uploadImage.pending, (state, action) => {
-        //     state.loading = true
-        // })
-        // builder.addCase(uploadImage.fulfilled, (state, action) => {
-        //     state.loading = false
-        //     state.fileURL = action.payload
-        //     state.error = ""
-        // })
-        // builder.addCase(uploadImage.rejected, (state, action) => {
-        //     state.loading = false
-        //     state.fileURL = ""
-        //     state.error = action.error.message
-        // })
         builder.addCase(editBook.pending, (state, action) => {
             state.loading = true
         })

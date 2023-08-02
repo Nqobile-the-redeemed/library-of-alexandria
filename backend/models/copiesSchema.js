@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+
+
 const copySchema = new mongoose.Schema({
     book: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,13 +23,16 @@ const copySchema = new mongoose.Schema({
     },
     notes: {
         type: String
-    },availability: {
+    },
+    availability: {
         type: String,
         enum: ['Available', 'Checked Out', 'Lost', 'Damaged'],
         default: 'Available'
     },
 
 });
+
+
 
 const Copy = mongoose.model('Copy', copySchema);
 
