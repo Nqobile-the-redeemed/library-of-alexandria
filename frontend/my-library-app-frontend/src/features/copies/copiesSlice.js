@@ -8,34 +8,85 @@ const initialState = {
     copies:[],
 }
 
-export const fetchCopiesByBookName = createAsyncThunk(
-    'copies/fetchCopiesByBookName',
-    async (bookName) => {
-         return axios.get(`http://localhost:5000/api/copies/book/${bookName}`)
-        .then((response) => {
-            const copies= response.data
-            return copies
-        })
+export const createCopy = createAsyncThunk(
+    'copies/createCopy',
+    async (copy, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('/api/copies', copy);
+            return response.data;
+        }
+        catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
-)
+);
+
+export const editCopy = createAsyncThunk(
+    'copies/editCopy',
+    async (copy, { rejectWithValue }) => {
+        try {
+            const response = await axios.put(`/api/copies/${copy._id}`, copy);
+            return response.data;
+        }
+        catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const deleteCopy = createAsyncThunk(
+    'copies/deleteCopy',
+    async (copyId, { rejectWithValue }) => {
+        try {
+            const response = await axios.delete(`/api/copies/${copyId}`);
+            return response.data;
+        }
+        catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 
 
 const copiesSlice = createSlice({
     name: 'copies',
     initialState: initialState,
     extraReducers: builder => {
-        builder.addCase(fetchCopiesByBookName.pending, (state, action) => {
-            state.loading = true
+        builder.addCase(createCopy.pending, (state, action) => {
+            state.loading = true;
         })
-        builder.addCase(fetchCopiesByBookName.fulfilled, (state, action) => {
-            state.loading = false
-            state.copies = action.payload
-            state.error = ""
+        builder.addCase(createCopy.fulfilled, (state, action) => {
+            state.loading = false;
+            state.copies.push(action.payload);
         })
-        builder.addCase(fetchCopiesByBookName.rejected, (state, action) => {
-            state.loading = false
-            state.copies = []
-            state.error = action.error.message
+        builder.addCase(createCopy.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
+        })
+        builder.addCase(editCopy.pending, (state, action) => {
+            state.loading = true;
+        })
+        builder.addCase(editCopy.fulfilled, (state, action) => {
+            state.loading = false;
+            const index = state.copies.findIndex(copy => copy._id === action.payload._id);
+            state.copies[index] = action.payload;
+        })
+        builder.addCase(editCopy.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
+        })
+        builder.addCase(deleteCopy.pending, (state, action) => {
+            state.loading = true;
+        })
+        builder.addCase(deleteCopy.fulfilled, (state, action) => {
+            state.loading = false;
+            state.copies = state.copies.filter(copy => copy._id !== action.payload._id);
+        })
+        builder.addCase(deleteCopy.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
         })
     }
 })

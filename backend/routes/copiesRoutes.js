@@ -5,7 +5,8 @@ const copiesController = require('../controllers/copiesController');
 
 // Define routes
 router.post('/', copiesController.saveCopy);
-router.get('/book/:bookName', copiesController.getCopiesByBookName);
+router.put('/:_id', copiesController.editCopyById);
+router.delete('/:_id', copiesController.deleteCopyById);
 // other routes...
 
 module.exports = router;

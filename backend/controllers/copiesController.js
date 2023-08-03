@@ -5,15 +5,6 @@ const Copy = require('../models/copiesSchema');
 
 
 
-// Retrieve all Copies from the database by the book name.
-const getCopiesByBookName = async (req, res) => {
-    try {
-        const copies = await Copy.find({}).populate('book');
-        res.json(copies);
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
 
 
 // Create and Save a new Copy
@@ -53,8 +44,63 @@ const saveCopy = async (req, res) => {
 };
 
   
+// Edit copy by ID
+
+const editCopyById = async (req, res) => {
+    const copyId = req.params._id;
+    const updatedCopy = req.body;
+  
+    try {
+      // Find the copy by ID and update its details
+      const copy = await Copy.findByIdAndUpdate(copyId, updatedCopy, { new: true });
+      console.log(copy)
+  
+      if (!copy) {
+        // Copy with the given ID not found
+        return res.status(404).json({ error: 'Copy not found' });
+      } 
+  
+      // Copy updated successfully
+      res.json(copy);
+    } catch (error) {
+      // Error occurred while updating the copy
+      res.status(500).json({ error: 'Failed to update copy' });
+    }
+  };
+  
+
+  // Delete copy by ID
+const deleteCopyById = async (req, res) => {
+    const copyId = req.params._id;
+
+    try {
+        // Find the copy by ID and delete it
+        const deletedCopy = await Copy.findByIdAndDelete(copyId);
+
+        if (!deletedCopy) {
+            // Copy with the given ID not found
+            return res.status(404).json({ error: 'Copy not found' });
+        }
+
+        // Remove the copy reference from the parent book
+        const parentBook = await Book.findByIdAndUpdate(
+            deletedCopy.book,
+            { $pull: { copies: copyId } },
+            { new: true }
+        );
+
+        // Return the updated parent book and a success message
+        res.json({ message: 'Copy deleted successfully', book: parentBook });
+    } catch (error) {
+        // Error occurred while deleting the copy
+        res.status(500).json({ error: 'Failed to delete copy' });
+    }
+};
+
+
 
 module.exports = {
-    getCopiesByBookName,
+    editCopyById,
+    deleteCopyById,
     saveCopy
 };
