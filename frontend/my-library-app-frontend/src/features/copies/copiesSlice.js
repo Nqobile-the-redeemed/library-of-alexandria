@@ -8,6 +8,21 @@ const initialState = {
     copies:[],
 }
 
+
+export const fetchCopies = createAsyncThunk(
+    'copies/fetchCopies',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get('/api/copies');
+            return response.data;
+        }
+        catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 export const createCopy = createAsyncThunk(
     'copies/createCopy',
     async (copy, { rejectWithValue }) => {

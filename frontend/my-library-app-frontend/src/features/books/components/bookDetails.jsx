@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { editBook } from '../bookSlice';
 import { uploadImage } from "../services/uploadImage"
+import CopiesTable from '../../copies/components/copiesTable';
 
 export const BookDetails = ({ book }) => {
 
@@ -187,6 +188,11 @@ export const BookDetails = ({ book }) => {
       <button className="delete-btn">Delete</button>
       {error && <p className="error">{error}</p>}
       {/* Add more book details as needed */}
+      <div className="copies-container">
+        <h3>Copies</h3>
+        <CopiesTable book = {book} />
+      </div>
     </div>
+   
   )
 }

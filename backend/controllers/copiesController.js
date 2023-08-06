@@ -4,6 +4,18 @@ const Book = require('../models/bookSchema');
 const Copy = require('../models/copiesSchema');
 
 
+// // Fetch all copies
+const getAllCopies = async (req, res) => {
+    try {
+        // Fetch all copies from the database
+        const copies = await Copy.find().populate('book').exec();
+        res.json(copies);
+    } catch (error) {
+        // Error occurred while fetching all copies
+        res.status(500).json({ error: 'Failed to fetch copies' });
+    }
+};
+
 
 
 
@@ -102,5 +114,6 @@ const deleteCopyById = async (req, res) => {
 module.exports = {
     editCopyById,
     deleteCopyById,
+    getAllCopies,
     saveCopy
 };
