@@ -4,7 +4,7 @@ import { editBook } from '../bookSlice';
 import { uploadImage } from "../services/uploadImage"
 import CopiesTable from '../../copies/components/copiesTable';
 
-export const BookDetails = ({ book }) => {
+export const BookDetails = ({ book, copies, copiesLoading, copiesError }) => {
 
 
   //The variose States
@@ -21,6 +21,9 @@ export const BookDetails = ({ book }) => {
 
   //The variouse imports
   const dispatch = useDispatch();
+
+  //Tests
+  console.log(copies)
 
 
   //The variouse handleclick functions
@@ -106,7 +109,10 @@ export const BookDetails = ({ book }) => {
 
   }
   
-
+//Handle the creation of a new copy
+  const handleCreateCopy = () => {
+    console.log("Create copy clicked")
+  }
 
 //Handle the change of images
   const handleImageChange = (e) => {
@@ -190,7 +196,11 @@ export const BookDetails = ({ book }) => {
       {/* Add more book details as needed */}
       <div className="copies-container">
         <h3>Copies</h3>
-        <CopiesTable book = {book} />
+        <button 
+          className="add-btn"
+          onClick={handleCreateCopy}
+        >Add</button>
+        <CopiesTable book = {book} copies={copies} copiesError={copiesError} copiesLoading={copiesLoading} />
       </div>
     </div>
    

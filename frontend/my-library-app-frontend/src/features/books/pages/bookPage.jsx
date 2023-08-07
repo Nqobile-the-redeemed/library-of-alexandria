@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchCopies } from '../../copies/copiesSlice'; // Import fetchCopies from copiesSlice
 import { BookListSection } from '../components/bookListSection'
 import { BookDetails } from '../components/bookDetails'
 import { fetchBooks } from '../bookSlice';
@@ -19,10 +20,15 @@ export const BookPage = () => {
   const dispatch = useDispatch();
 
 
-  // IMPORTING THE STATE FROM THE STORE
+  // IMPORTING THE Book STATE FROM THE STORE
   const books = useSelector((state) => state.books.books);
   const loading = useSelector((state) => state.books.loading);
   const error = useSelector((state) => state.books.error);
+
+  //Importing the copies state from the store
+  const copies = useSelector((state) => state.copies.copies);
+  const copiesLoading = useSelector((state) => state.copies.loading);
+  const copiesError = useSelector((state) => state.copies.error);
 
 
 
@@ -35,6 +41,7 @@ export const BookPage = () => {
   //FUNCTION TO FETCH DATA ON LOAD FROM THE BACKEND
   useEffect(() => {
     dispatch(fetchBooks());
+    dispatch(fetchCopies()); // Fetch copies when the component mounts
   }, []);
 
 
@@ -43,6 +50,7 @@ export const BookPage = () => {
     onSelectBook(bookId);
   };
 
+  console.log(copies);
 
 
   if (loading) {
@@ -65,6 +73,9 @@ export const BookPage = () => {
           <BookDetails 
             book={books.find((book) => book._id === selectedBookId)} 
             onSaveSuccess={() => setSelectedBookId(null)} // Add a callback to reset selectedBookId
+            copies={copies.filter((copy) => copy.book._id === selectedBookId)} // Pass filtered copies to BookDetails
+            copiesLoading={copiesLoading}
+            copiesError={copiesError}
           />
         )}
     </div>

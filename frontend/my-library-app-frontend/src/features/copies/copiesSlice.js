@@ -13,7 +13,8 @@ export const fetchCopies = createAsyncThunk(
     'copies/fetchCopies',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get('/api/copies');
+            const response = await axios.get('http://localhost:5000/api/copies/');
+            console.log(response.data);
             return response.data;
         }
         catch (error) {
@@ -27,7 +28,7 @@ export const createCopy = createAsyncThunk(
     'copies/createCopy',
     async (copy, { rejectWithValue }) => {
         try {
-            const response = await axios.post('/api/copies', copy);
+            const response = await axios.post('http://localhost:5000/api/copies/', copy);
             return response.data;
         }
         catch (error) {
@@ -40,7 +41,7 @@ export const editCopy = createAsyncThunk(
     'copies/editCopy',
     async (copy, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`/api/copies/${copy._id}`, copy);
+            const response = await axios.put(`http://localhost:5000/api/copies/${copy._id}`, copy);
             return response.data;
         }
         catch (error) {
@@ -53,7 +54,7 @@ export const deleteCopy = createAsyncThunk(
     'copies/deleteCopy',
     async (copyId, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`/api/copies/${copyId}`);
+            const response = await axios.delete(`http://localhost:5000/api/copies/${copyId}`);
             return response.data;
         }
         catch (error) {
@@ -100,6 +101,17 @@ const copiesSlice = createSlice({
             state.copies = state.copies.filter(copy => copy._id !== action.payload._id);
         })
         builder.addCase(deleteCopy.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
+        })
+        builder.addCase(fetchCopies.pending, (state, action) => {
+            state.loading = true;
+        })
+        builder.addCase(fetchCopies.fulfilled, (state, action) => {
+            state.loading = false;
+            state.copies = action.payload;
+        })
+        builder.addCase(fetchCopies.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload.message;
         })
