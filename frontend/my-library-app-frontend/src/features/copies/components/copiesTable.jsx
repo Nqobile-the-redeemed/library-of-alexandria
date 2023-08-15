@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCopies } from '../copiesSlice';
+import EditCopyForm from './EditCopyForm';
+import CopyTableRow from './CopyTableRow';
 
 const CopiesTable = ({ copies, copiesLoading, copiesError, book }) => {
 
@@ -28,19 +30,15 @@ const CopiesTable = ({ copies, copiesLoading, copiesError, book }) => {
           <th>Availability</th>
           <th>State</th>
           <th>Notes</th>
+          <th>issue ID</th>
+          <th>Buttons</th>
           {/* Add more columns as needed */}
         </tr>
       </thead>
       <tbody>
-        {copies.map(copy => (
-          <tr key={copy._id}>
-            <td>{copy._id}</td>
-            <td>{copy.availability}</td>
-            <td>{copy.state}</td>
-            <td>{copy.notes}</td>
-            {/* Add more columns as needed */}
-          </tr>
-        ))}
+      {copies.map(copy => (
+        <CopyTableRow key={copy._id} copy={copy} />
+      ))}
       </tbody>
     </table>
   );

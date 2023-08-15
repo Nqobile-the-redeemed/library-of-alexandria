@@ -23,19 +23,34 @@ export const fetchCopies = createAsyncThunk(
     }
 );
 
-
 export const createCopy = createAsyncThunk(
     'copies/createCopy',
-    async (copy, { rejectWithValue }) => {
-        try {
-            const response = await axios.post('http://localhost:5000/api/copies/', copy);
-            return response.data;
-        }
-        catch (error) {
-            return rejectWithValue(error.response.data);
-        }
+    async (copy) => {
+       return  axios.post('http://localhost:5000/api/copies/', copy)
+        .then((response) => {
+            const newCopy= response.data
+            return newCopy
     }
-);
+    )
+}
+)
+
+
+
+
+// export const createCopy = createAsyncThunk(
+//     'copies/createCopy',
+//     async (copy, { rejectWithValue }) => {
+//         try {
+//             console.log(copy);
+//             const response = await axios.post('http://localhost:5000/api/copies/', copy);
+//             return response.data;
+//         }
+//         catch (error) {
+//             return rejectWithValue(error.response.data);
+//         }
+//     }
+// );
 
 export const editCopy = createAsyncThunk(
     'copies/editCopy',

@@ -9,6 +9,10 @@ const bookLogSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    copies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Copy'
+    }],
     checkoutDate: {
         type: Date
     },

@@ -39,7 +39,7 @@ const bookSchema = new mongoose.Schema({
   }],
   userLog: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserLog'
+    ref: 'User'
   }],
   ssid:  {
     type: String

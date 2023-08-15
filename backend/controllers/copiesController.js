@@ -31,7 +31,9 @@ const saveCopy = async (req, res) => {
   console.log(req.body)
   const copy = new Copy({
       issueID: req.body.issueID,
-      book: req.body.book
+      book: req.body.book,
+      notes: req.body.notes,
+      state: req.body.state,
   });
 
   // Save copy in the database

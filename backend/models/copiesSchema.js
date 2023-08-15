@@ -7,14 +7,14 @@ const copySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book'
     },
-    bookLog: {
+    bookLog: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'BookLog'
-    },
-    user: {
+    }],
+    user: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    },
+    }],
     issueID: {
         type: String
     },

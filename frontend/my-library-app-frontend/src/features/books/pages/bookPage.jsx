@@ -30,6 +30,11 @@ export const BookPage = () => {
   const copiesLoading = useSelector((state) => state.copies.loading);
   const copiesError = useSelector((state) => state.copies.error);
 
+  //Importing the transactions state from the store
+  const transactions = useSelector((state) => state.transactions.transactions);
+  const transactionsLoading = useSelector((state) => state.transactions.loading);
+  const transactionsError = useSelector((state) => state.transactions.error);
+
 
 
   //Function to update the selected book id state
@@ -76,6 +81,9 @@ export const BookPage = () => {
             copies={copies.filter((copy) => copy.book._id === selectedBookId)} // Pass filtered copies to BookDetails
             copiesLoading={copiesLoading}
             copiesError={copiesError}
+            transactions={transactions.filter((transaction) => transaction.book._id === selectedBookId)}
+            transactionsLoading={transactionsLoading}
+            transactionsError={transactionsError}
           />
         )}
     </div>

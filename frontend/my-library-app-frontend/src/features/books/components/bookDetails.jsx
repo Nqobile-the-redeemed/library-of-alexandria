@@ -3,8 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { editBook } from '../bookSlice';
 import { uploadImage } from "../services/uploadImage"
 import CopiesTable from '../../copies/components/copiesTable';
+import NewCopyForm from '../../copies/components/newCopyForm';
+import { fetchCopies } from '../../copies/copiesSlice';
+import TransactionsTable from '../../transactions/components/TransactionsTable';
+import NewTransactionForm from '../../transactions/components/NewTransactionForm';
 
-export const BookDetails = ({ book, copies, copiesLoading, copiesError }) => {
+export const BookDetails = ({ book, copies, copiesLoading, copiesError, transactions, transctionsLoading, transactionsError }) => {
 
 
   //The variose States
@@ -18,6 +22,8 @@ export const BookDetails = ({ book, copies, copiesLoading, copiesError }) => {
   const [editedCategory, setEditedCategory] = useState(book.category || ''); // Initialize to an empty string
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [modalState, setModalState] = useState(false);
+  const [transactionModalState, setTransactionModalState] = useState(false);
 
   //The variouse imports
   const dispatch = useDispatch();
@@ -111,8 +117,19 @@ export const BookDetails = ({ book, copies, copiesLoading, copiesError }) => {
   
 //Handle the creation of a new copy
   const handleCreateCopy = () => {
-    console.log("Create copy clicked")
+
+    setModalState(true);
+
   }
+
+
+//Handle the creation of a new transaction
+  const handleCreateTransaction = () => {
+
+    setTransactionModalState(true);
+
+  }
+
 
 //Handle the change of images
   const handleImageChange = (e) => {
@@ -200,7 +217,16 @@ export const BookDetails = ({ book, copies, copiesLoading, copiesError }) => {
           className="add-btn"
           onClick={handleCreateCopy}
         >Add</button>
+        <NewCopyForm book = {book} modalState = {modalState} setModalState = {setModalState} />
         <CopiesTable book = {book} copies={copies} copiesError={copiesError} copiesLoading={copiesLoading} />
+      </div>
+      <div className="transactions-container">
+        <h3>Transactions</h3>
+        <button 
+          className="add-btn"
+        >Add</button>
+        <NewTransactionForm book = {book} transactionModalState = {transactionModalState} setTransactionModalState = {setTransactionModalState} />
+        <TransactionsTable transactions={transactions} transactionsError={transactionsError} transactionsLoading={transactionsLoading} />
       </div>
     </div>
    
