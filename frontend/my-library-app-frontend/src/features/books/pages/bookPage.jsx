@@ -5,6 +5,8 @@ import { fetchCopies } from '../../copies/copiesSlice'; // Import fetchCopies fr
 import { BookListSection } from '../components/bookListSection'
 import { BookDetails } from '../components/bookDetails'
 import { fetchBooks } from '../bookSlice';
+import { fetchTransactions } from '../../transactions/transactionSlice';
+import { fetchUsers } from '../../users/userSlice';
 
 
 
@@ -36,6 +38,12 @@ export const BookPage = () => {
   const transactionsError = useSelector((state) => state.transactions.error);
 
 
+  //Importing the user state from the store
+  const user = useSelector((state) => state.users.user);
+  const userLoading = useSelector((state) => state.users.loading);
+  const userError = useSelector((state) => state.users.error);
+
+
 
   //Function to update the selected book id state
   const onSelectBook = (bookId) => {
@@ -47,6 +55,8 @@ export const BookPage = () => {
   useEffect(() => {
     dispatch(fetchBooks());
     dispatch(fetchCopies()); // Fetch copies when the component mounts
+    dispatch(fetchTransactions()); // Fetch transactions when the component mounts
+    dispatch(fetchUsers()); // Fetch user when the component mounts
   }, []);
 
 
@@ -84,6 +94,9 @@ export const BookPage = () => {
             transactions={transactions.filter((transaction) => transaction.book._id === selectedBookId)}
             transactionsLoading={transactionsLoading}
             transactionsError={transactionsError}
+            user={user}
+            userLoading={userLoading}
+            userError={userError}
           />
         )}
     </div>

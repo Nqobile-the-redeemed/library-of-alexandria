@@ -8,6 +8,8 @@ import  { HomePage }  from './features/home/pages/homePage.jsx'
 import { TransactionPage } from './features/transactions/pages/transactionPage.jsx'
 import { Header } from './features/navigation/components/header.jsx'
 import { Footer } from './features/navigation/components/footer.jsx'
+import NewTransactionPage from './features/transactions/pages/NewTransactionPage'
+
 
 function App() {
 
@@ -20,6 +22,7 @@ function App() {
         < Route path="/copies" element={<CopiesPage />} />
         < Route path="/users" element={<UsersPage />} />
         < Route path="/transactions" element={<TransactionPage />} />
+        < Route path="/transactions/new" element={<NewTransactionPage />} />
       </Routes>
       <Footer />
     </>

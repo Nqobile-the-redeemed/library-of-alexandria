@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { editBook } from '../bookSlice';
 import { uploadImage } from "../services/uploadImage"
 import CopiesTable from '../../copies/components/copiesTable';
@@ -8,7 +9,7 @@ import { fetchCopies } from '../../copies/copiesSlice';
 import TransactionsTable from '../../transactions/components/TransactionsTable';
 import NewTransactionForm from '../../transactions/components/NewTransactionForm';
 
-export const BookDetails = ({ book, copies, copiesLoading, copiesError, transactions, transctionsLoading, transactionsError }) => {
+export const BookDetails = ({ book, copies, copiesLoading, copiesError, transactions, transctionsLoading, transactionsError, user, userLoading, userError }) => {
 
 
   //The variose States
@@ -222,11 +223,10 @@ export const BookDetails = ({ book, copies, copiesLoading, copiesError, transact
       </div>
       <div className="transactions-container">
         <h3>Transactions</h3>
-        <button 
-          className="add-btn"
-        >Add</button>
-        <NewTransactionForm book = {book} transactionModalState = {transactionModalState} setTransactionModalState = {setTransactionModalState} />
-        <TransactionsTable transactions={transactions} transactionsError={transactionsError} transactionsLoading={transactionsLoading} />
+        <Link to="/transactions/new">
+          <button>Create New Book Log</button>
+        </Link>
+        <TransactionsTable transactions={transactions} transactionsError={transactionsError} transctionsLoading={transctionsLoading} />
       </div>
     </div>
    
