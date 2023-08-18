@@ -62,14 +62,44 @@ const NewTransactionPage = () => {
     dispatch(fetchUsers()); // Fetch user when the component mounts
   }, []);
 
-
+  //FUNCTION TO HANDLE THE DELETION OF A BOOK ENTRY
+  const handleDeleteBookEntry = (bookId) => {
+    const newTransactionBooks = transactionBooks.filter((transactionBook) => transactionBook !== bookId);
+    setTransactionBooks(newTransactionBooks);
+  }
 
   return (
     <div>
       NewTransactionPage
       <div>
         <BookSelectionSection books = {books} loading = {loading} error = {error} transactionBooks = {transactionBooks} setTransactionBooks = {setTransactionBooks} />
-        <NewTransactionForm />
+        <NewTransactionForm 
+          handleDeleteBookEntry={handleDeleteBookEntry}
+          user = {user}
+          userLoading = {userLoading}
+          userError = {userError}
+          books = {books}
+          loading = {loading}
+          error = {error}
+          copies = {copies}
+          copiesLoading = {copiesLoading}
+          copiesError = {copiesError}
+          transactionBooks = {transactionBooks} 
+          setTransactionBooks = {setTransactionBooks}
+          transactionCopies = {transactionCopies}
+          setTransactionCopies = {setTransactionCopies}
+          transactionUser = {transactionUser}
+          setTransactionUser = {setTransactionUser}
+          transactionCheckoutDate = {transactionCheckoutDate}
+          setTransactionCheckoutDate = {setTransactionCheckoutDate}
+          transactionDueDate = {transactionDueDate}
+          setTransactionDueDate = {setTransactionDueDate}
+          transactionEmail = {transactionEmail}
+          setTransactionEmail = {setTransactionEmail}
+          transactionPhone = {transactionPhone}
+          setTransactionPhone = {setTransactionPhone}
+          newTransaction = {newTransaction}
+        />
       </div>
     </div>
   )

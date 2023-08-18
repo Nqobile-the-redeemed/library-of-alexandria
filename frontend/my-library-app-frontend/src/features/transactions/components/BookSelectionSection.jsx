@@ -24,12 +24,12 @@ const BookSelectionSection = ({ books, loading, error, transactionBooks, setTran
     }
 
     const handleBookSelection = (selectedBook) => {
+        console.log(selectedBook);
         // Check if the book is already selected
-        if (!transactionBooks.some(book => book.id === selectedBook.id)) {
-            setTransactionBooks(prevBooks => [...prevBooks, selectedBook]);
-        }
-
-        console.log(transactionBooks);
+        if (!transactionBooks.some(book => book._id === selectedBook._id)) {
+            setTransactionBooks(prevBooks => [...prevBooks, selectedBook._id]);
+            console.log(transactionBooks);
+        } 
     }
 
 

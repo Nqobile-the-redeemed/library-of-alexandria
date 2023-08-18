@@ -7,7 +7,11 @@ const path = require('path');
 
 const getAllBooks = async (req, res) => {
     try {
-      const books = await Book.find();
+      const books = await Book.find()
+        .populate('userLog')
+        .populate('copies')
+        .populate('bookLog')
+        .exec();
       res.json(books);
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error: Retrivee book error' });
