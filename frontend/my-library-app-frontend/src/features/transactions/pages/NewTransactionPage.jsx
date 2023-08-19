@@ -44,6 +44,8 @@ const NewTransactionPage = () => {
   const [transactionEmail, setTransactionEmail] = useState(null);
   const [transactionPhone, setTransactionPhone] = useState(null);
 
+  const [newUserFormState, setNewUserFormState] = useState(false);
+
   const newTransaction = {
     books: transactionBooks,
     copies: transactionCopies,
@@ -66,6 +68,12 @@ const NewTransactionPage = () => {
   const handleDeleteBookEntry = (bookId) => {
     const newTransactionBooks = transactionBooks.filter((transactionBook) => transactionBook !== bookId);
     setTransactionBooks(newTransactionBooks);
+  }
+
+  //Handle the visibility of the user form state
+  const handleNewUserForm = () => {
+    setNewUserFormState(!newUserFormState);
+    console.log(newUserFormState);
   }
 
   return (
@@ -99,6 +107,9 @@ const NewTransactionPage = () => {
           transactionPhone = {transactionPhone}
           setTransactionPhone = {setTransactionPhone}
           newTransaction = {newTransaction}
+          newUserFormState = {newUserFormState}
+          setNewUserFormState = {setNewUserFormState}
+          handleNewUserForm = {handleNewUserForm}
         />
       </div>
     </div>

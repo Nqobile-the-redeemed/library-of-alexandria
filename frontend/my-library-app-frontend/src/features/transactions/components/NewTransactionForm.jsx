@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addTransaction } from '../transactionSlice';
 import "../../../app.css"
 import OrderDetailCard from './OrderDetailCard';
+import NewUserForm from '../../users/components/NewUserForm';
 
-const NewTransactionForm = ({ handleDeleteBookEntry, user, userLoading, userError, books, loading, error, copies, copiesLoading, copiesError, transactionBooks, setTransactionBooks, transactionCopies, setTransactionCopies, transactionUser, setTransactionUser, transactionCheckoutDate, setTransactionCheckoutDate, transactionDueDate, setTransactionDueDate, transactionEmail, setTransactionEmail, transactionPhone, setTransactionPhone, newTransaction }) => {
+const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFormState ,handleDeleteBookEntry, user, userLoading, userError, books, loading, error, copies, copiesLoading, copiesError, transactionBooks, setTransactionBooks, transactionCopies, setTransactionCopies, transactionUser, setTransactionUser, transactionCheckoutDate, setTransactionCheckoutDate, transactionDueDate, setTransactionDueDate, transactionEmail, setTransactionEmail, transactionPhone, setTransactionPhone, newTransaction }) => {
   
   const handleCopyChange = (selectedCopyId) => {
     const selectedCopy = transactionCopies.find(copy => copy === selectedCopyId);
@@ -26,6 +27,17 @@ const NewTransactionForm = ({ handleDeleteBookEntry, user, userLoading, userErro
   const selectedBookDetails = transactionBooks.map(bookId =>
     books.find(book => book._id === bookId)
   );
+
+  // Temporary variable to hold the users full details
+  const [userDetails, setUserDetails] = useState({});
+
+  // Handle a change in the value of the selected user
+  const handleUserChange = (user) => {
+    setTransactionUser(user._id);
+    setUserDetails(user);
+    console.log(transactionUser);
+  };
+
 
 
   return (
@@ -55,7 +67,33 @@ const NewTransactionForm = ({ handleDeleteBookEntry, user, userLoading, userErro
             <h4>User Details</h4>
             <button 
               className = "user-details-button"
+              onClick = {handleNewUserForm}
             >Create New User</button>
+            <div className = "new-user-details-form">
+              <NewUserForm 
+                newUserFormState = {newUserFormState}
+                setNewUserFormState = {setNewUserFormState}
+                user = {user}
+                userLoading = {userLoading}
+                userError = {userError}
+                handleNewUserForm={handleNewUserForm}
+              />
+              <div>
+                <div>
+                  <label htmlFor="UserSelection">Select User</label>
+                  <select
+                    id="UserSelection"
+                    value=""
+                    onChange={(e) => handleUserChange(e.target.value)}
+                  >
+                    <option value="" disabled>Select User</option>
+                    {user.map(user => (
+                      <option key={user._id} value={user._id}>{user.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
           
         </div>

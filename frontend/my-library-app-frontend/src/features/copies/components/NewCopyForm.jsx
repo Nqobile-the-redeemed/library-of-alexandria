@@ -51,8 +51,12 @@ const NewCopyForm = ({ book, modalState, setModalState }) => {
         <>
             <div className="overlay-styles" />
             <div className="modal-styles">
-                NewCopyForm
-                <button onClick={() => setModalState(false)}>Close</button>
+
+                <div>
+                    NewCopyForm
+                    <button onClick={() => setModalState(false)}>Close</button>
+                </div>
+                
                 <div>
 
                     <input 
