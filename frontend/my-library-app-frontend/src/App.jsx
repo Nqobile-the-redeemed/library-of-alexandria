@@ -9,6 +9,7 @@ import { TransactionPage } from './features/transactions/pages/transactionPage.j
 import { Header } from './features/navigation/components/header.jsx'
 import { Footer } from './features/navigation/components/footer.jsx'
 import NewTransactionPage from './features/transactions/pages/NewTransactionPage'
+import DatePicker from "react-datepicker";
 
 
 function App() {

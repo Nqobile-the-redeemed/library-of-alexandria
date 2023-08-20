@@ -32,17 +32,18 @@ const NewTransactionPage = () => {
 
 
   //Importing the user state from the store
-  const user = useSelector((state) => state.users.user);
+  const user = useSelector((state) => state.users.users);
   const userLoading = useSelector((state) => state.users.loading);
   const userError = useSelector((state) => state.users.error);
 
   const [transactionBooks, setTransactionBooks] = useState([]);
   const [transactionCopies, setTransactionCopies] = useState([]);
   const [transactionUser, setTransactionUser] = useState(null);
-  const [transactionCheckoutDate, setTransactionCheckoutDate] = useState(null);
+  const [transactionCheckoutDate, setTransactionCheckoutDate] = useState(new Date());
   const [transactionDueDate, setTransactionDueDate] = useState(null);
   const [transactionEmail, setTransactionEmail] = useState(null);
   const [transactionPhone, setTransactionPhone] = useState(null);
+  const [transactionAddress, setTransactionAddress] = useState(null);
 
   const [newUserFormState, setNewUserFormState] = useState(false);
 
@@ -53,7 +54,8 @@ const NewTransactionPage = () => {
     checkoutDate: transactionCheckoutDate,
     returnDate: transactionDueDate,
     email: transactionEmail,
-    phoneNumber: transactionPhone
+    phoneNumber: transactionPhone,
+    address: transactionAddress
   }
 
   //FUNCTION TO FETCH DATA ON LOAD FROM THE BACKEND
@@ -110,6 +112,8 @@ const NewTransactionPage = () => {
           newUserFormState = {newUserFormState}
           setNewUserFormState = {setNewUserFormState}
           handleNewUserForm = {handleNewUserForm}
+          transactionAddress = {transactionAddress}
+          setTransactionAddress = {setTransactionAddress}
         />
       </div>
     </div>
