@@ -17,10 +17,25 @@ const createLog = async (req, res) => {
         const session = await mongoose.startSession();
         session.startTransaction();
 
+        console.log('Creating bookLog:', req.body);
+
+        // Convert array of strings to array of ObjectIds
+        const bookIds = req.body.books.map(bookId => {
+            return new mongoose.Types.ObjectId(bookId);
+        });
+
+        const copyIds = req.body.copies.map(copyId => {
+            return new mongoose.Types.ObjectId(copyId);
+        });
+
+        const userId = new mongoose.Types.ObjectId(req.body.users);
+
+        // Create a bookLog
+
         const bookLog = new BookLog({
-            books: req.body.books,
-            users: req.body.users,
-            copies: req.body.copies,
+            books: bookIds,
+            users: userId,
+            copies: copyIds,
             checkoutDate: req.body.checkoutDate,
             returnDate: req.body.returnDate,
             email: req.body.email,
@@ -67,6 +82,22 @@ const createLog = async (req, res) => {
         res.status(201).json(createdLog);
     } catch (error) {
         console.error("Error creating book log:", error);
+
+        // Log more detailed information about the error
+        console.error("Error details:", {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+            code: error.code,
+            fileName: error.fileName,
+            lineNumber: error.lineNumber,
+            columnNumber: error.columnNumber,
+            description: error.description,
+            status: error.status,
+            inner: error.inner,
+            // ... any other relevant properties you want to log
+        });
+
         res.status(500).send({
             message: "Some error occurred while creating the bookLog."
         });

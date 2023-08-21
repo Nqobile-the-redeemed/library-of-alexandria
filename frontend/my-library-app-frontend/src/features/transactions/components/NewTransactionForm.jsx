@@ -9,6 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import OrderDetailCard from './OrderDetailCard';
 import NewUserForm from '../../users/components/NewUserForm';
 import { Link } from 'react-router-dom';
+import mongoose from 'mongoose'; // Use the import statement
+
 
 const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFormState ,handleDeleteBookEntry, user, userLoading, userError, books, loading, error, copies, copiesLoading, copiesError, transactionBooks, setTransactionBooks, transactionCopies, setTransactionCopies, transactionUser, setTransactionUser, transactionCheckoutDate, setTransactionCheckoutDate, transactionDueDate, setTransactionDueDate, transactionEmail, setTransactionEmail, transactionPhone, setTransactionPhone, newTransaction, transactionAddress, setTransactionAddress }) => {
   
@@ -40,10 +42,12 @@ const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFor
 
   // Handle a change in the value of the selected user
   const handleUserChange = (userId) => {
-    setTransactionUser(userId); // Use userId, not user
+    setTransactionUser(userId);  // Use userId, not user
     const selectedUser = user.find(u => u._id === userId);
     setUserDetails(selectedUser);
-    console.log(transactionUser);
+    setTransactionEmail(selectedUser.email);
+    setTransactionPhone(selectedUser.phoneNumber);
+    setTransactionAddress(selectedUser.address);
   };
 
   const handleCancelFormSubmission = () => {
@@ -78,7 +82,8 @@ const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFor
             <OrderDetailCard
               key={book._id}
               book={book}
-              availableCopies={book.copies.filter(copy => copy.availability === 'Available')}
+              availableCopies={book.copies}
+              // availableCopies={book.copies.filter(copy => copy.availability === 'Available')}
               selectedCopies={transactionCopies}
               handleCopyChange={handleCopyChange}
               handleRemoveCopy={handleRemoveCopy}
@@ -130,7 +135,7 @@ const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFor
                     <input
                       id='email'
                       type='text'
-                      value={userDetails.email || ''}
+                      value={transactionEmail || ''}
                       onChange={(e) => setTransactionEmail(e.target.value)}
                     />
                   </div>
@@ -139,7 +144,7 @@ const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFor
                     <input
                       id='phone'
                       type='text'
-                      value={userDetails.phoneNumber || ''}
+                      value={transactionPhone || ''}
                       onChange={(e) => setTransactionPhone(e.target.value)}
                     />
                   </div>
@@ -148,7 +153,7 @@ const NewTransactionForm = ({ handleNewUserForm ,newUserFormState, setNewUserFor
                     <input
                       id='address'
                       type='text'
-                      value={userDetails.address || ''}
+                      value={transactionAddress || ''}
                       onChange={(e) => setTransactionAddress(e.target.value)}
                     />
                   </div>

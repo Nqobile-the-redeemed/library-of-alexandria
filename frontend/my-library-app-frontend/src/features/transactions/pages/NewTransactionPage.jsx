@@ -7,6 +7,7 @@ import { fetchBooks } from '../../books/bookSlice';
 import { fetchCopies } from '../../copies/copiesSlice'; // Import fetchCopies from copiesSlice
 import { fetchTransactions } from '../transactionSlice'; // Import fetchTransactions from transactionsSlice
 import { fetchUsers } from '../../users/userSlice'; // Import fetchUser from usersSlice
+import mongoose from 'mongoose'; // Use the import statement
 
 
 const NewTransactionPage = () => {
@@ -47,12 +48,20 @@ const NewTransactionPage = () => {
 
   const [newUserFormState, setNewUserFormState] = useState(false);
 
+
+  
+  // CONVERTED DATES
+  const formattedCheckoutDate = new Date(transactionCheckoutDate);
+  const formattedDueDate = new Date(transactionDueDate);
+
+
+
   const newTransaction = {
     books: transactionBooks,
     copies: transactionCopies,
-    user: transactionUser,
-    checkoutDate: transactionCheckoutDate,
-    returnDate: transactionDueDate,
+    users: transactionUser,
+    checkoutDate: formattedCheckoutDate.toISOString(),
+    returnDate: formattedDueDate.toISOString(),
     email: transactionEmail,
     phoneNumber: transactionPhone,
     address: transactionAddress
