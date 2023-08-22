@@ -91,7 +91,7 @@ export const BookPage = () => {
             copies={copies.filter((copy) => copy.book._id === selectedBookId)} // Pass filtered copies to BookDetails
             copiesLoading={copiesLoading}
             copiesError={copiesError}
-            transactions={transactions.filter((transaction) => transaction.books._id === selectedBookId)}
+            transactions={transactions.filter((transaction) => transaction.books === selectedBookId)}
             transactionsLoading={transactionsLoading}
             transactionsError={transactionsError}
             user={user}

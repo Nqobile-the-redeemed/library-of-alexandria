@@ -19,7 +19,7 @@ const createLog = async (req, res) => {
 
         console.log('Creating bookLog:', req.body);
 
-        // Convert array of strings to array of ObjectIds
+        //Convert array of strings to array of ObjectIds
         const bookIds = req.body.books.map(bookId => {
             return new mongoose.Types.ObjectId(bookId);
         });
@@ -30,19 +30,39 @@ const createLog = async (req, res) => {
 
         const userId = new mongoose.Types.ObjectId(req.body.users);
 
-        // Create a bookLog
+        console.log('bookIds:', bookIds);
+        console.log('copyIds:', copyIds);
+        console.log('userId:', userId);
+
+        //Create a bookLog
 
         const bookLog = new BookLog({
-            books: bookIds,
             users: userId,
-            copies: copyIds,
             checkoutDate: req.body.checkoutDate,
             returnDate: req.body.returnDate,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
+            books: [bookIds[0]], // Initialize with the first book
+            copies: [copyIds[0]], // Initialize with the first copy
         });
 
+
         const createdLog = await bookLog.save();
+
+        // Add the remaining books and copies to the bookLog
+        for (let i = 1; i < bookIds.length; i++) {
+            await BookLog.updateOne(
+                { _id: createdLog._id },
+                { $addToSet: { books: bookIds[i] } }
+            );
+        }
+
+        for (let i = 1; i < copyIds.length; i++) {
+            await BookLog.updateOne(
+                { _id: createdLog._id },
+                { $addToSet: { copies: copyIds[i] } }
+            );
+        }
 
   
         // Update related documents for each book 
@@ -52,6 +72,7 @@ const createLog = async (req, res) => {
                 book.bookLog.push(createdLog._id);
                 book.userLog.push(createdLog.users);
                 await book.save();
+                await BookLog.updateOne({ _id: createdLog._id }, { $addToSet: { books: bookId } });
             }
         }
 
@@ -63,6 +84,7 @@ const createLog = async (req, res) => {
                 copy.user.push(createdLog.users);
                 copy.availability = 'Checked Out'; // Update copy availability
                 await copy.save();
+                await BookLog.updateOne({ _id: createdLog._id }, { $addToSet: { copies: copyId } });
             }
         }
 
