@@ -5,6 +5,28 @@ const Book = require('../models/bookSchema');
 const Copy = require('../models/copiesSchema');
 
 
+// // Return a bookLog with the specified id in the request
+
+// const returnLog = async (req, res) => {
+//     const bookLogId = req.params._id;
+
+//     try {
+//         const session = await mongoose.startSession();
+//         session.startTransaction();
+
+//         const endedBookLog = await BookLog.findById(bookLogId);
+
+//         if (!endedBookLog) {
+//             res.status(404).json({ message: "BookLog not found" });
+//             return;
+//         }
+
+//         // Update related documents for each book
+
+//         for (const bookId of endedBookLog.books) {
+//             const book = await
+
+
 // Create and Save a new bookLog
 
 const createLog = async (req, res) => {
@@ -41,6 +63,7 @@ const createLog = async (req, res) => {
             checkoutDate: req.body.checkoutDate,
             returnDate: req.body.returnDate,
             email: req.body.email,
+            address: req.body.address,
             phoneNumber: req.body.phoneNumber,
             books: [bookIds[0]], // Initialize with the first book
             copies: [copyIds[0]], // Initialize with the first copy
@@ -238,6 +261,10 @@ const editLog = async (req, res) => {
             updates.phoneNumber = updatedBookLog.phoneNumber;
         }
 
+        if (existingBookLog.address !== updatedBookLog.address) {
+            updates.address = updatedBookLog.address;
+        }
+
         // Convert array of strings to array of ObjectIds
         const updatedBooks = updatedBookLog.books.map(bookId => {
             console.log('Converting bookId:', bookId);
@@ -381,5 +408,6 @@ function getEntityUpdated(updatedBookLog) {
     getLogs,
     createLog,
     deleteLog,
-    editLog
+    editLog,
+    returnLog
   };

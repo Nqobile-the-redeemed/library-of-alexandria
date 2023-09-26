@@ -19,7 +19,18 @@ const bookLogSchema = new mongoose.Schema({
     returnDate: {
         type: Date
     },
+    actualReturnDate: {
+        type: Date
+    },
     email: {
+        type: String
+    },
+    status: {
+        type: String,
+        enum: ['Returned', 'Lost', 'Stolen', 'With User'],
+        default: 'With User'
+    },
+    address: {
         type: String
     },
     phoneNumber: {
