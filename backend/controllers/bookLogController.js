@@ -5,27 +5,51 @@ const Book = require('../models/bookSchema');
 const Copy = require('../models/copiesSchema');
 
 
-// // Return a bookLog with the specified id in the request
+// Return a bookLog with the specified id in the request
 
-// const returnLog = async (req, res) => {
-//     const bookLogId = req.params._id;
+const returnLog = async (req, res) => {
+    const bookLogId = req.params._id;
 
-//     try {
-//         const session = await mongoose.startSession();
-//         session.startTransaction();
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
 
-//         const endedBookLog = await BookLog.findById(bookLogId);
+        const endedBookLog = await BookLog.findById(bookLogId);
 
-//         if (!endedBookLog) {
-//             res.status(404).json({ message: "BookLog not found" });
-//             return;
-//         }
+        if (!endedBookLog) {
+            res.status(404).json({ message: "BookLog not found" });
+            return;
+        }
 
-//         // Update related documents for each book
+        // Update related documents for the booklog
 
-//         for (const bookId of endedBookLog.books) {
-//             const book = await
+        for (const copyId of endedBookLog.copies) {
+            // Corrected 'copy' to 'Copy' to match the model name
+            const copy = await Copy.findById(copyId).exec();
+            if (copy) {
+                copy.availability = 'Available'; // Update copy availability
+                await copy.save();
+            }
+        }
 
+        // Update the status of the bookLog to returned
+
+        endedBookLog.status = 'Returned';
+        endedBookLog.actualReturnDate = Date.now();
+        await endedBookLog.save();
+
+       // End the session and return the response
+
+       await session.commitTransaction(); // Changed to 'commitTransaction' to save changes
+       session.endSession();
+
+       res.json(endedBookLog); // Corrected 'endedBooklog' to 'endedBookLog'
+    } catch (error) {
+        // Error occurred while returning the booklog
+        res.status(500).json({ error: 'Failed to return bookLog' }); // Changed the error message
+    }
+};
+        
 
 // Create and Save a new bookLog
 

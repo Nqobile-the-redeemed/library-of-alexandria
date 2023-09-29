@@ -70,6 +70,23 @@ export const editTransaction = createAsyncThunk(
         }
 );
 
+
+export const returnTransaction = createAsyncThunk(
+    "transactions/returnTransaction",
+    async (transaction) => {
+
+        try{
+            const response = await axios.put(`http://localhost:5000/api/bookLog/${transaction.id}/return`, transaction);
+            return response.data;
+        }
+        catch(error){
+            console.log(error);
+        }
+
+    }
+)
+
+
 const transactionsSlice = createSlice({
     name: 'transactions',
     initialState,
@@ -115,6 +132,17 @@ const transactionsSlice = createSlice({
             state.loading = false;
         });
         builder.addCase(editTransaction.rejected, (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        });
+        builder.addCase(returnTransaction.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(returnTransaction.fulfilled, (state, action) => {
+            state.transactions = state.transactions.map(transaction => transaction.id === action.payload.id ? action.payload : transaction);
+            state.loading = false;
+        });
+        builder.addCase(returnTransaction.rejected, (state, action) => {
             state.error = action.payload;
             state.loading = false;
         });
